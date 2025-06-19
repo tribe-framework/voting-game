@@ -1,0 +1,263 @@
+{{page-title "Admin"}}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Workshop Administration</h1>
+        <RefreshButton @onRefresh={{this.refreshQuestions}} />
+      </div>
+    </div>
+  </div>
+
+  <!-- Help Section -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="card border-info">
+        <div class="card-header bg-info text-white">
+          <h5 class="card-title mb-0">
+            <i class="bi bi-info-circle me-2"></i>
+            How to Run a Voting Workshop
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <h6>1. Setup</h6>
+              <p class="small">Create questions with options in Junction. Make sure the question is marked as active.</p>
+            </div>
+            <div class="col-md-4">
+              <h6>2. Session Management</h6>
+              <p class="small">Select a scenario, create a session, and share the QR code with participants.</p>
+            </div>
+            <div class="col-md-4">
+              <h6>3. Data Collection</h6>
+              <p class="small">Switch between voting scenarios to collect different types of responses. Toggle results visibility as needed.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Question Selection -->
+    <div class="col-lg-4 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Select Question</h5>
+        </div>
+        <div class="card-body">
+          {{#if this.activeQuestions.length}}
+            <div class="list-group">
+              {{#each this.activeQuestions as |question|}}
+                <button 
+                  type="button" 
+                  class="list-group-item list-group-item-action {{if (eq this.selectedQuestion question) 'active'}}"
+                  {{on "click" (fn this.selectQuestion question)}}
+                >
+                  <div class="d-flex w-100 justify-content-between">
+                    <h6 class="mb-1">{{question.modules.title}}</h6>
+                    <small>{{question.modules.active_scenario}}</small>
+                  </div>
+                  <small>{{question.modules.options.length}} options</small>
+                </button>
+              {{/each}}
+            </div>
+          {{else}}
+            <div class="text-center text-muted py-4">
+              <i class="bi bi-question-circle display-4"></i>
+              <p class="mt-3">No active questions found. Create questions in Junction first.</p>
+            </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+
+    <!-- Session Controls -->
+    <div class="col-lg-8">
+      {{#if this.selectedQuestion}}
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Session Controls</h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Active Scenario</h6>
+                    <div class="btn-group-vertical d-grid gap-2 mb-3">
+                      {{#each this.scenarios as |scenario|}}
+                        <button 
+                          type="button" 
+                          class="btn {{if (eq this.selectedQuestion.modules.active_scenario scenario.key) 'btn-primary' 'btn-outline-primary'}}"
+                          {{on "click" (fn this.switchScenario scenario.key)}}
+                        >
+                          {{scenario.title}}
+                          {{#if (eq this.selectedQuestion.modules.active_scenario scenario.key)}}
+                            <i class="bi bi-check-circle ms-2"></i>
+                          {{/if}}
+                        </button>
+                      {{/each}}
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Display Options</h6>
+                    <div class="d-grid gap-2 mb-3">
+                      <button 
+                        type="button" 
+                        class="btn {{if (eq this.selectedQuestion.modules.show_results 'yes') 'btn-success' 'btn-outline-success'}}"
+                        {{on "click" this.toggleResults}}
+                      >
+                        {{#if (eq this.selectedQuestion.modules.show_results "yes")}}
+                          <i class="bi bi-eye me-2"></i>
+                          Results Visible
+                        {{else}}
+                          <i class="bi bi-eye-slash me-2"></i>
+                          Results Hidden
+                        {{/if}}
+                      </button>
+                      
+                      <button 
+                        type="button" 
+                        class="btn btn-info"
+                        {{on "click" this.viewResults}}
+                      >
+                        <i class="bi bi-bar-chart me-2"></i>
+                        View Full Results
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Session Access -->
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Session Access</h5>
+              </div>
+              <div class="card-body">
+                {{#if this.currentSessionUrl}}
+                  <QrDisplay @sessionUrl={{this.currentSessionUrl}} />
+                  
+                  <div class="mt-3">
+                    <div class="input-group">
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        value={{this.currentSessionUrl}} 
+                        readonly
+                      >
+                      <button 
+                        type="button" 
+                        class="btn btn-outline-secondary"
+                        {{on "click" this.copySessionUrl}}
+                      >
+                        <i class="bi bi-clipboard"></i>
+                      </button>
+                    </div>
+                  </div>
+                {{else}}
+                  <div class="text-center">
+                    <button 
+                      type="button" 
+                      class="btn btn-success btn-lg"
+                      {{on "click" this.createSession}}
+                      disabled={{not this.canCreateSession}}
+                    >
+                      <i class="bi bi-play-circle me-2"></i>
+                      Start New Session
+                    </button>
+                    
+                    {{#unless this.canCreateSession}}
+                      <p class="text-muted mt-2 small">
+                        Select an active question to start a session
+                      </p>
+                    {{/unless}}
+                  </div>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 mb-4">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Session Status</h5>
+              </div>
+              <div class="card-body">
+                <SessionStatus />
+                
+                <div class="mt-3">
+                  <h6>Quick Stats</h6>
+                  <div class="row text-center">
+                    <div class="col-4">
+                      <div class="border rounded p-2">
+                        <div class="fw-bold text-primary">{{this.selectedQuestion.modules.active_scenario}}</div>
+                        <small class="text-muted">Current Mode</small>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="border rounded p-2">
+                        <div class="fw-bold {{if (eq this.selectedQuestion.modules.show_results 'yes') 'text-success' 'text-warning'}}">
+                          {{if (eq this.selectedQuestion.modules.show_results "yes") "Visible" "Hidden"}}
+                        </div>
+                        <small class="text-muted">Results</small>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="border rounded p-2">
+                        <div class="fw-bold text-info">{{this.selectedQuestion.modules.options.length}}</div>
+                        <small class="text-muted">Options</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Preview -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Question Preview</h5>
+              </div>
+              <div class="card-body">
+                {{#if this.selectedQuestion.modules.options}}
+                  <div class="mt-3">
+                    <h6>Available Options:</h6>
+                    <ol class="list-group list-group-numbered">
+                      {{#each this.selectedQuestion.modules.options as |option|}}
+                        <li class="list-group-item">{{option}}</li>
+                      {{/each}}
+                    </ol>
+                  </div>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      {{else}}
+        <!-- No Question Selected -->
+        <div class="card">
+          <div class="card-body text-center py-5">
+            <i class="bi bi-arrow-left display-4 text-muted"></i>
+            <h5 class="mt-3">Select a Question</h5>
+            <p class="text-muted">Choose a question from the sidebar to start managing your voting workshop session.</p>
+          </div>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+
+</div>
+{{outlet}}

@@ -1,0 +1,51 @@
+<div class="card h-100">
+  <div class="card-header">
+    <h6 class="card-title mb-0">{{@title}}</h6>
+    <small class="text-muted">{{@count}} responses</small>
+  </div>
+  
+  <div class="card-body">
+    {{#if this.chartData.length}}
+      <div class="chart-container">
+        {{generate-bar-chart this.chartData this.maxValue}}
+      </div>
+      
+      <div class="mt-3 pt-3 border-top">
+        <div class="row text-center">
+          <div class="col-6">
+            <div class="small text-muted">Responses</div>
+            <div class="fw-bold">{{@count}}</div>
+          </div>
+          <div class="col-6">
+            <div class="small text-muted">Avg. Time</div>
+            <div class="fw-bold">{{this.averageResponseTime}}s</div>
+          </div>
+        </div>
+      </div>
+    {{else}}
+      <div class="text-center text-muted py-4">
+        <i class="bi bi-bar-chart-line display-6"></i>
+        <p class="mt-2 mb-0">No responses yet</p>
+      </div>
+    {{/if}}
+  </div>
+</div>
+
+<style>
+.chart-container {
+  min-height: 150px;
+}
+
+.chart-container .bar-item {
+  font-size: 0.875rem;
+}
+
+.chart-container .bar-label {
+  font-weight: 500;
+}
+
+.chart-container .bar-value {
+  font-weight: 600;
+  color: var(--bs-primary);
+}
+</style>

@@ -1,0 +1,54 @@
+<div class="card text-center">
+  <div class="card-header">
+    <h5 class="card-title mb-0">Session Access</h5>
+  </div>
+  
+  <div class="card-body">
+    {{#if this.qrCodeUrl}}
+      <div class="mb-3">
+        <img 
+          src="{{this.qrCodeUrl}}" 
+          alt="QR Code for session access" 
+          class="img-fluid rounded border"
+          style="max-width: 300px;"
+        >
+      </div>
+      
+      <div class="mb-3">
+        <h6 class="text-muted">Scan to Join Session</h6>
+        <code class="fs-6">{{this.shortUrl}}</code>
+      </div>
+      
+      <div class="d-grid gap-2">
+        <a 
+          href="{{this.sessionUrl}}" 
+          target="_blank" 
+          class="btn btn-primary"
+        >
+          <i class="bi bi-box-arrow-up-right me-2"></i>
+          Open Session Link
+        </a>
+        
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary btn-sm"
+          {{on "click" (fn (mut this.copied) true)}}
+        >
+          <i class="bi bi-clipboard me-1"></i>
+          Copy Link
+        </button>
+      </div>
+      
+      {{#if this.copied}}
+        <div class="alert alert-success mt-3 mb-0">
+          <small>Link copied to clipboard!</small>
+        </div>
+      {{/if}}
+    {{else}}
+      <div class="text-muted">
+        <i class="bi bi-qr-code display-4"></i>
+        <p class="mt-2">QR code will appear when session is active</p>
+      </div>
+    {{/if}}
+  </div>
+</div>

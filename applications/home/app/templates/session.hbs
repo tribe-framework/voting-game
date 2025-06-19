@@ -1,0 +1,66 @@
+{{page-title "Session"}}
+<div class="container-fluid py-3">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      
+      <SessionStatus />
+      
+      {{#if this.currentQuestion}}
+        <QuestionDisplay @question={{this.currentQuestion.modules}} />
+        
+        <div class="mt-4">
+          {{#unless this.showResults}}
+            {{#if (eq this.activeScenario "simple_choice")}}
+              <SimpleChoiceForm 
+                @question={{this.currentQuestion.modules}}
+                @onSubmit={{this.submitResponse}}
+              />
+            {{else if (eq this.activeScenario "choice_overload")}}
+              <ChoiceOverloadForm 
+                @question={{this.currentQuestion.modules}}
+                @onSubmit={{this.submitResponse}}
+              />
+            {{else if (eq this.activeScenario "ranking")}}
+              <RankingForm 
+                @question={{this.currentQuestion.modules}}
+                @onSubmit={{this.submitResponse}}
+              />
+            {{else if (eq this.activeScenario "point_allocation")}}
+              <PointAllocationForm 
+                @question={{this.currentQuestion.modules}}
+                @onSubmit={{this.submitResponse}}
+              />
+            {{else if (eq this.activeScenario "approval_voting")}}
+              <ApprovalVotingForm 
+                @question={{this.currentQuestion.modules}}
+                @onSubmit={{this.submitResponse}}
+              />
+            {{/if}}
+          {{else}}
+            <ResultsOverview @question={{this.currentQuestion.modules}} />
+          {{/unless}}
+        </div>
+        
+        <div class="mt-4 text-center">
+          <RefreshButton @onRefresh={{this.refreshData}} />
+        </div>
+        
+      {{else}}
+        <div class="card">
+          <div class="card-body text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3 text-muted">Loading session...</p>
+          </div>
+        </div>
+      {{/if}}
+      
+      {{#unless this.demographicsCompleted}}
+        <DemographicForm @onComplete={{this.onDemographicsComplete}} />
+      {{/unless}}
+      
+    </div>
+  </div>
+</div>
+{{outlet}}

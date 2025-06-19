@@ -1,0 +1,224 @@
+{{page-title "Results"}}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1 class="h3 mb-0">Results Analysis</h1>
+          {{#if this.question}}
+            <p class="text-muted mb-0">{{this.question.title}}</p>
+          {{/if}}
+        </div>
+        <RefreshButton @onRefresh={{this.refreshData}} />
+      </div>
+    </div>
+  </div>
+
+  {{#if this.hasAnyData}}
+    <!-- Key Findings -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Key Findings</h5>
+          </div>
+          <div class="card-body">
+            {{#if this.keyFindings.length}}
+              <ul class="list-unstyled mb-0">
+                {{#each this.keyFindings as |finding|}}
+                  <li class="mb-2">
+                    <i class="bi bi-lightbulb text-warning me-2"></i>
+                    {{finding}}
+                  </li>
+                {{/each}}
+              </ul>
+            {{else}}
+              <p class="text-muted mb-0">Analysis will appear as more responses are collected.</p>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overview Stats -->
+    <div class="row mb-4">
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card bg-primary text-white">
+          <div class="card-body text-center">
+            <h3 class="card-title">{{this.totalResponses}}</h3>
+            <p class="card-text">Total Responses</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card bg-info text-white">
+          <div class="card-body text-center">
+            <h3 class="card-title">{{object-keys this.processedData length}}</h3>
+            <p class="card-text">Voting Methods</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card bg-success text-white">
+          <div class="card-body text-center">
+            <h3 class="card-title">{{round (multiply (this.calculateConsistency) 100)}}%</h3>
+            <p class="card-text">Consistency</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card bg-warning text-white">
+          <div class="card-body text-center">
+            <h3 class="card-title">{{!--object-values this.processedData | map-by 'avgTime' | average--}}s</h3>
+            <p class="card-text">Avg. Response Time</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scenario Comparison -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Scenario Comparison</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              {{#each-in this.processedData as |scenarioKey scenarioData|}}
+                <div class="col-lg-4 col-md-6 mb-4">
+                  <ScenarioChart 
+                    @scenario={{scenarioKey}}
+                    @title={{scenarioData.title}}
+                    @responses={{scenarioData.responses}}
+                    @count={{scenarioData.count}}
+                  />
+                </div>
+              {{/each-in}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed Analysis -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Detailed Analysis</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Voting Method</th>
+                    <th>Responses</th>
+                    <th>Top Choice</th>
+                    <th>Avg. Time</th>
+                    <th>Distribution</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each-in this.processedData as |scenarioKey scenarioData|}}
+                    <tr>
+                      <td>
+                        <strong>{{scenarioData.title}}</strong>
+                      </td>
+                      <td>
+                        <span class="badge bg-primary">{{scenarioData.count}}</span>
+                      </td>
+                      <td>
+                        {{#if scenarioData.preferences.length}}
+                          {{scenarioData.preferences.0.option}}
+                          <small class="text-muted">({{scenarioData.preferences.0.percentage}}%)</small>
+                        {{else}}
+                          <span class="text-muted">No data</span>
+                        {{/if}}
+                      </td>
+                      <td>
+                        {{scenarioData.avgTime}}s
+                      </td>
+                      <td>
+                        <div class="progress" style="height: 10px; width: 100px;">
+                          {{#if scenarioData.preferences.length}}
+                            <div 
+                              class="progress-bar" 
+                              style="width: {{scenarioData.preferences.0.percentage}}%"
+                            ></div>
+                          {{/if}}
+                        </div>
+                      </td>
+                    </tr>
+                  {{/each-in}}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Research Insights -->
+    {{#if this.analysisData}}
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Research Insights</h5>
+            </div>
+            <div class="card-body">
+              {{#if this.analysisData.content}}
+                {{#each this.analysisData.content as |insight|}}
+                  <div class="mb-3">
+                    {{format-text insight}}
+                  </div>
+                {{/each}}
+              {{/if}}
+              
+              {{#if this.analysisData.key_findings}}
+                <h6 class="mt-4">Key Research Findings:</h6>
+                <ul>
+                  {{#each this.analysisData.key_findings as |finding|}}
+                    <li>{{finding}}</li>
+                  {{/each}}
+                </ul>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+
+  {{else}}
+    <!-- No Data State -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body text-center py-5">
+            {{#if this.isLoading}}
+              <div class="spinner-border text-primary mb-3" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <h5>Loading Results...</h5>
+              <p class="text-muted">Please wait while we gather the response data.</p>
+            {{else}}
+              <i class="bi bi-bar-chart display-1 text-muted mb-3"></i>
+              <h5>No Response Data Available</h5>
+              <p class="text-muted">Results will appear here once participants start submitting responses.</p>
+              
+              {{#if this.question}}
+                <div class="mt-4">
+                  <p>Share this question with participants:</p>
+                  <code>{{this.question.title}}</code>
+                </div>
+              {{/if}}
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/if}}
+</div>
+{{outlet}}

@@ -1,0 +1,81 @@
+{{#if this.isVisible}}
+  <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Optional Demographics</h5>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted mb-4">
+            Help us understand response patterns by optionally sharing some demographic information. 
+            All responses remain anonymous.
+          </p>
+          
+          <div class="mb-3">
+            <label for="gender-field" class="form-label">Gender (optional)</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="gender-field"
+              placeholder="e.g., Male, Female, Non-binary, Prefer not to say"
+              value={{this.gender}}
+              {{on "input" (fn this.updateField "gender")}}
+            >
+          </div>
+          
+          <div class="mb-3">
+            <label for="age-field" class="form-label">Age (optional)</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="age-field"
+              placeholder="e.g., 25, 30-35, Prefer not to say"
+              value={{this.age}}
+              {{on "input" (fn this.updateField "age")}}
+            >
+          </div>
+          
+          <div class="mb-3">
+            <label for="caste-field" class="form-label">Caste/Community (optional)</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="caste-field"
+              placeholder="e.g., General, OBC, SC, ST, Prefer not to say"
+              value={{this.caste}}
+              {{on "input" (fn this.updateField "caste")}}
+            >
+          </div>
+          
+          <div class="alert alert-info">
+            <small>
+              <i class="bi bi-info-circle me-1"></i>
+              This information helps researchers understand how different groups might approach decision-making differently. 
+              You can skip this step or fill only what you're comfortable sharing.
+            </small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button 
+            type="button" 
+            class="btn btn-secondary"
+            {{on "click" this.skipDemographics}}
+          >
+            Skip
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-primary"
+            {{on "click" this.submitDemographics}}
+          >
+            {{#if this.hasAnyData}}
+              Continue with Demographics
+            {{else}}
+              Continue without Demographics
+            {{/if}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+{{/if}}

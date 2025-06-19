@@ -1,0 +1,38 @@
+<div class="card">
+  <div class="card-body">
+    <form {{on "submit" (fn this.submitResponse)}}>
+      <div class="mb-4">
+        {{#each this.options as |option index|}}
+          <div class="form-check mb-3">
+            <input 
+              class="form-check-input" 
+              type="radio" 
+              name="choiceOverload" 
+              id="overload-option-{{index}}"
+              {{on "change" (fn this.selectOption option)}}
+              checked={{eq this.selectedOption option}}
+            >
+            <label class="form-check-label fs-5" for="overload-option-{{index}}">
+              {{option}}
+            </label>
+          </div>
+        {{/each}}
+      </div>
+      
+      <div class="d-grid">
+        <button 
+          type="submit" 
+          class="btn btn-primary btn-lg"
+          disabled={{or (not this.selectedOption) this.isSubmitting}}
+        >
+          {{#if this.isSubmitting}}
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            Submitting...
+          {{else}}
+            Submit Response
+          {{/if}}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

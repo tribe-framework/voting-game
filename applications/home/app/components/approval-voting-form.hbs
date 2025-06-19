@@ -1,0 +1,61 @@
+<div class="card">
+  <div class="card-body">
+    <div class="mb-3">
+      <small class="text-muted">Select all options you find acceptable. You can choose multiple options or none.</small>
+    </div>
+    
+    <div class="mb-4">
+      {{#each this.options as |option index|}}
+        <div class="form-check mb-3">
+          <input 
+            class="form-check-input" 
+            type="checkbox" 
+            id="approval-option-{{index}}"
+            checked={{this.isApproved option}}
+            {{on "change" (fn this.toggleApproval option)}}
+          >
+          <label class="form-check-label fs-5" for="approval-option-{{index}}">
+            {{option}}
+            {{#if (this.isApproved option)}}
+              <span class="badge bg-success ms-2">✓ Approved</span>
+            {{/if}}
+          </label>
+        </div>
+      {{/each}}
+    </div>
+    
+    <div class="mb-3">
+      <div class="card bg-light">
+        <div class="card-body py-2">
+          <small class="text-muted">
+            {{#if this.hasSelections}}
+              You have approved {{this.approvedOptions.length}} option{{unless (eq this.approvedOptions.length 1) "s"}}.
+            {{else}}
+              No options selected yet. You can approve multiple options or submit with none selected.
+            {{/if}}
+          </small>
+        </div>
+      </div>
+    </div>
+    
+    <div class="d-grid">
+      <button 
+        type="button" 
+        class="btn btn-primary btn-lg"
+        {{on "click" this.submitResponse}}
+        disabled={{this.isSubmitting}}
+      >
+        {{#if this.isSubmitting}}
+          <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+          Submitting...
+        {{else}}
+          {{#if this.hasSelections}}
+            Submit Approval ({{this.approvedOptions.length}} selected)
+          {{else}}
+            Submit (No approvals)
+          {{/if}}
+        {{/if}}
+      </button>
+    </div>
+  </div>
+</div>

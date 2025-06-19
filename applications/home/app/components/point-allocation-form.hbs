@@ -1,0 +1,98 @@
+<div class="card">
+  <div class="card-body">
+    <div class="mb-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <span class="text-muted">Distribute 10 points among the options</span>
+        <span class="badge {{if this.isValidAllocation 'bg-success' 'bg-warning'}}">
+          {{this.remainingPoints}} points remaining
+        </span>
+      </div>
+    </div>
+    
+    <div class="mb-4">
+      {{#each this.pointDistribution as |item index|}}
+        <div class="card mb-3 border-{{if item.points 'primary' 'secondary'}}">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-md-6">
+                <h6 class="mb-0">{{item.option}}</h6>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex align-items-center justify-content-end">
+                  <button 
+                    type="button" 
+                    class="btn btn-outline-secondary btn-sm me-2"
+                    {{on "click" (fn this.adjustPoints index -1)}}
+                    disabled={{eq item.points 0}}
+                  >
+                    −
+                  </button>
+                  
+                  <input 
+                    type="number" 
+                    class="form-control form-control-sm text-center mx-2" 
+                    style="width: 60px;"
+                    value={{item.points}}
+                    min="0" 
+                    max="10"
+                    {{on "input" (fn this.setPoints index)}}
+                  >
+                  
+                  <button 
+                    type="button" 
+                    class="btn btn-outline-secondary btn-sm ms-2"
+                    {{on "click" (fn this.adjustPoints index 1)}}
+                    disabled={{or (eq item.points 10) (eq this.remainingPoints 0)}}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            {{#if item.points}}
+              <div class="progress mt-2" style="height: 8px;">
+                <div 
+                  class="progress-bar" 
+                  role="progressbar" 
+                  style="width: {{multiply item.points 10}}%"
+                  aria-valuenow="{{item.points}}" 
+                  aria-valuemin="0" 
+                  aria-valuemax="10"
+                ></div>
+              </div>
+            {{/if}}
+          </div>
+        </div>
+      {{/each}}
+    </div>
+    
+    {{#unless this.isValidAllocation}}
+      <div class="alert alert-warning">
+        <small>
+          {{#if (gt this.remainingPoints 0)}}
+            You have {{this.remainingPoints}} points left to allocate.
+          {{else}}
+            You must allocate exactly 10 points total.
+          {{/if}}
+        </small>
+      </div>
+    {{/unless}}
+    
+    <div class="d-grid">
+      <button 
+        type="button" 
+        class="btn btn-primary btn-lg"
+        {{on "click" this.submitResponse}}
+        disabled={{or (not this.isValidAllocation) this.isSubmitting}}
+      >
+        {{#if this.isSubmitting}}
+          <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+          Submitting...
+        {{else}}
+          Submit Point Allocation
+        {{/if}}
+      </button>
+    </div>
+  </div>
+</div>

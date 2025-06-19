@@ -1,0 +1,17 @@
+<div class="card shadow-sm">
+  <div class="card-header bg-primary text-white">
+    <h5 class="card-title mb-0">{{this.scenarioTitle}}</h5>
+  </div>
+  <div class="card-body">
+    {{#if this.currentQuestion}}
+      <h4 class="mb-3">{{this.currentQuestion.modules.title}}</h4>
+    {{else}}
+      <div class="text-center text-muted">
+        <p>Waiting for question...</p>
+        <div class="spinner-border spinner-border-sm" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    {{/if}}
+  </div>
+</div>
