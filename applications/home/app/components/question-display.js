@@ -5,14 +5,8 @@ import { tracked } from '@glimmer/tracking';
 export default class QuestionDisplay extends Component {
 	@service store;
 
-	@tracked currentQuestion = null;
-	@tracked timeStarted = null;
-
-	constructor() {
-		super(...arguments);
-		this.currentQuestion = this.args.question;
-		this.timeStarted = new Date();
-	}
+	@tracked currentQuestion = this.args.question;
+	@tracked timeStarted = new Date();
 
 	get scenarioTitle() {
 		const titles = {
@@ -23,7 +17,7 @@ export default class QuestionDisplay extends Component {
 			approval_voting: 'Approval Voting',
 		};
 
-		return titles[this.currentQuestion?.active_scenario] || 'Voting Exercise';
+		return titles[this.currentQuestion.modules?.active_scenario] || 'Voting Exercise';
 	}
 
 	get scenarioDescription() {
@@ -37,6 +31,6 @@ export default class QuestionDisplay extends Component {
 				'Select all options you find acceptable (you can choose multiple).',
 		};
 
-		return descriptions[this.currentQuestion?.active_scenario] || '';
+		return descriptions[this.currentQuestion.modules?.active_scenario] || '';
 	}
 }

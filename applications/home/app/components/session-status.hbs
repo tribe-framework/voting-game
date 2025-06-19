@@ -2,9 +2,6 @@
   <div class="d-flex align-items-center">
     <i class="{{this.statusIcon}} me-2"></i>
     <span>{{this.statusMessage}}</span>
-    {{#if (eq this.connectionStatus "connected")}}
-      <span class="badge bg-primary ms-2">{{this.participantCount}} participants</span>
-    {{/if}}
   </div>
   
   {{#if (eq this.connectionStatus "error")}}

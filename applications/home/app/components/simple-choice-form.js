@@ -17,10 +17,10 @@ export default class SimpleChoiceForm extends Component {
 	}
 
 	get options() {
-		if (!this.args.question?.options) return [];
+		if (!this.args.question.modules?.options) return [];
 
 		// For simple choice, show original options
-		return this.args.question.options;
+		return this.args.question.modules.options;
 	}
 
 	@action

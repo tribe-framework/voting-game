@@ -58,8 +58,8 @@ export default class ResultsOverview extends Component {
 						return {
 							scenario: scenario.key,
 							title: scenario.title,
-							responses: responses.toArray(),
-							count: responses.length,
+							responses: responses.modules,
+							count: responses.modules.length,
 						};
 					} catch (error) {
 						console.warn(`Failed to load ${scenario.key} responses:`, error);

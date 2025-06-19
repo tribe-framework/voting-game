@@ -27,18 +27,16 @@ export default class SessionController extends Controller {
 	}
 
 	get canShowResults() {
-		return this.currentQuestion?.show_results === 'yes';
+		return this.currentQuestion?.modules.show_results === 'yes';
 	}
 
 	@action
 	async loadQuestion() {
 		try {
-			if (this.currentQuestion) {
-				// Reload to get latest data
-				await this.currentQuestion.reload();
+			if (this.currentQuestion.modules) {
 				this.activeScenario =
-					this.currentQuestion.active_scenario || 'simple_choice';
-				this.showResults = this.currentQuestion.show_results === 'yes';
+					this.currentQuestion.modules.active_scenario || 'simple_choice';
+				this.showResults = this.currentQuestion.modules.show_results === 'yes';
 			}
 		} catch (error) {
 			console.error('Failed to load question:', error);
