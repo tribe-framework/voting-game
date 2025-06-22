@@ -30,9 +30,6 @@ export default class ScenarioChart extends Component {
 			case 'point_allocation':
 				this.chartData = this.processPointData(responses);
 				break;
-			case 'approval_voting':
-				this.chartData = this.processApprovalData(responses);
-				break;
 			default:
 				this.chartData = [];
 		}
@@ -41,7 +38,7 @@ export default class ScenarioChart extends Component {
 	processChoiceData(responses) {
 		const counts = {};
 		responses.forEach((response) => {
-			const option = response.selected_option;
+			const option = response.modules.selected_option;
 			if (option) {
 				counts[option] = (counts[option] || 0) + 1;
 			}
@@ -55,9 +52,9 @@ export default class ScenarioChart extends Component {
 	processRankingData(responses) {
 		const scores = {};
 		responses.forEach((response) => {
-			if (response.rankings && Array.isArray(response.rankings)) {
-				response.rankings.forEach((option, index) => {
-					const score = response.rankings.length - index; // Higher score for better rank
+			if (response.modules.rankings && Array.isArray(response.modules.rankings)) {
+				response.modules.rankings.forEach((option, index) => {
+					const score = response.modules.rankings.length - index; // Higher score for better rank
 					scores[option] = (scores[option] || 0) + score;
 				});
 			}
@@ -72,10 +69,10 @@ export default class ScenarioChart extends Component {
 		const totals = {};
 		responses.forEach((response) => {
 			if (
-				response.point_distribution &&
-				Array.isArray(response.point_distribution)
+				response.modules.point_distribution &&
+				Array.isArray(response.modules.point_distribution)
 			) {
-				response.point_distribution.forEach((item) => {
+				response.modules.point_distribution.forEach((item) => {
 					if (item.option && typeof item.points === 'number') {
 						totals[item.option] = (totals[item.option] || 0) + item.points;
 					}
@@ -92,10 +89,10 @@ export default class ScenarioChart extends Component {
 		const counts = {};
 		responses.forEach((response) => {
 			if (
-				response.approved_options &&
-				Array.isArray(response.approved_options)
+				response.modules.approved_options &&
+				Array.isArray(response.modules.approved_options)
 			) {
-				response.approved_options.forEach((option) => {
+				response.modules.approved_options.forEach((option) => {
 					counts[option] = (counts[option] || 0) + 1;
 				});
 			}
@@ -115,7 +112,7 @@ export default class ScenarioChart extends Component {
 		if (!this.args.responses || !this.args.responses.length) return 0;
 
 		const totalTime = this.args.responses.reduce((sum, response) => {
-			return sum + (response.response_time_seconds || 0);
+			return sum + (response.modules.response_time_seconds || 0);
 		}, 0);
 
 		return Math.round((totalTime / this.args.responses.length) * 100) / 100;

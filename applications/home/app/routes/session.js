@@ -21,7 +21,7 @@ export default class SessionRoute extends Route {
 
 			return {
 				sessionId: params.session_id,
-				question: activeQuestion,
+				question: activeQuestion[0],
 			};
 		} catch (error) {
 			console.error('Failed to load session:', error);

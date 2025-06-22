@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card-body">
     <div class="mb-3">
-      <small class="text-muted">Drag items to reorder them, or use the arrow buttons. Top = Best, Bottom = Worst</small>
+      <small class="text-muted">Use arrow buttons to reorder.<br />Top = Best, Bottom = Worst.</small>
     </div>
     
     <div class="ranking-list mb-4" id="ranking-sortable">
@@ -13,24 +13,26 @@
                 <span class="badge bg-primary me-3">{{add index 1}}</span>
                 <span class="fs-5">{{option}}</span>
               </div>
-              <div class="btn-group-vertical btn-group-sm">
-                <button 
-                  type="button" 
-                  class="btn btn-outline-secondary"
-                  {{on "click" (fn this.moveUp index)}}
-                  disabled={{eq index 0}}
-                >
-                  ↑
-                </button>
-                <button 
-                  type="button" 
-                  class="btn btn-outline-secondary"
-                  {{on "click" (fn this.moveDown index)}}
-                  disabled={{eq index (sub this.rankings.length 1)}}
-                >
-                  ↓
-                </button>
-              </div>
+              {{#unless @responseSubmitted}}
+                <div class="btn-group-vertical btn-group-sm">
+                  <button 
+                    type="button" 
+                    class="btn btn-outline-secondary"
+                    {{on "click" (fn this.moveUp index)}}
+                    disabled={{eq index 0}}
+                  >
+                    ↑
+                  </button>
+                  <button 
+                    type="button" 
+                    class="btn btn-outline-secondary"
+                    {{on "click" (fn this.moveDown index)}}
+                    disabled={{eq index (sub this.rankings.length 1)}}
+                  >
+                    ↓
+                  </button>
+                </div>
+              {{/unless}}
             </div>
           </div>
         </div>
@@ -38,26 +40,34 @@
     </div>
     
     <div class="d-grid">
-      <button 
-        type="button" 
-        class="btn btn-primary btn-lg"
-        {{on "click" this.submitResponse}}
-        disabled={{or (not this.rankings.length) this.isSubmitting}}
-      >
-        {{#if this.isSubmitting}}
-          <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-          Submitting...
-        {{else}}
-          Submit Rankings
-        {{/if}}
-      </button>
+      {{#unless @responseSubmitted}}
+        <button 
+          type="button" 
+          class="btn btn-primary btn-lg"
+          {{on "click" this.submitResponse}}
+          disabled={{or (not this.rankings.length) this.isSubmitting}}
+        >
+          {{#if this.isSubmitting}}
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            Submitting...
+          {{else}}
+            Submit Rankings
+          {{/if}}
+        </button>
+      {{else}}
+        <button 
+          type="button" 
+          class="btn btn-success btn-lg"
+        >
+          <i class="bi bi-check-circle ms-2"></i> Response submitted
+        </button>
+      {{/unless}}
     </div>
   </div>
 </div>
 
 <style>
 .ranking-item {
-  cursor: move;
   transition: all 0.2s ease;
 }
 

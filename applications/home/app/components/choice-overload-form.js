@@ -17,10 +17,10 @@ export default class ChoiceOverloadForm extends Component {
 	}
 
 	get options() {
-		if (!this.args.question?.options) return [];
+		if (!this.args.question.modules?.options) return [];
 
 		// For choice overload, add one extra option
-		const originalOptions = [...this.args.question.options];
+		const originalOptions = [...this.args.question.modules.options];
 		const extraOptions = [
 			'None of the above',
 			'Other',
@@ -57,8 +57,10 @@ export default class ChoiceOverloadForm extends Component {
 
 		try {
 			const responseData = {
-				question: this.args.question.id,
+				question: this.args.question.slug,
 				selected_option: this.selectedOption,
+				session_id: this.args.sessionId,
+				device_id: this.args.deviceId,
 			};
 
 			await this.responseTracker.saveResponse(

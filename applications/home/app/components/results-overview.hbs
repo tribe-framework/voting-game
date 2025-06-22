@@ -28,7 +28,7 @@
       
       <div class="row">
         {{#each this.resultsData as |scenarioData|}}
-          <div class="col-md-6 col-lg-4 mb-4">
+          <div class="col-md-12 mb-4">
             <ScenarioChart 
               @scenario={{scenarioData.scenario}}
               @title={{scenarioData.title}}
@@ -38,33 +38,6 @@
           </div>
         {{/each}}
       </div>
-      
-      {{#if (gt this.resultsData.length 1)}}
-        <div class="mt-4">
-          <h6>Comparative Analysis</h6>
-          <div class="row">
-            {{#each this.resultsData as |scenarioData|}}
-              {{#if (gt scenarioData.count 0)}}
-                <div class="col-md-6 mb-3">
-                  <div class="card border-secondary">
-                    <div class="card-body">
-                      <h6 class="card-title">{{scenarioData.title}}</h6>
-                      <div class="small text-muted">
-                        {{scenarioData.count}} responses
-                        {{#if scenarioData.responses.length}}
-                          <br>
-                          Avg. time: {{calculate-average scenarioData.responses "response_time_seconds"}}s
-                        {{/if}}
-                      </div>
-                      {{generate-bar-chart (format-chart-data scenarioData.responses scenarioData.scenario)}}
-                    </div>
-                  </div>
-                </div>
-              {{/if}}
-            {{/each}}
-          </div>
-        </div>
-      {{/if}}
     {{else}}
       <div class="text-center text-muted py-5">
         {{#if this.isLoading}}

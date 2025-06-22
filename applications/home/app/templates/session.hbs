@@ -4,35 +4,57 @@
     <div class="col-12 col-md-8 col-lg-6">
       
       <SessionStatus />
+        
+      <div class="my-4 text-center">
+        <RefreshButton @onRefresh={{this.refreshData}} />
+      </div>
       
       {{#if this.currentQuestion}}
-        <QuestionDisplay @question={{this.currentQuestion}} />
+
+        {{#unless this.showResults}}
+          <QuestionDisplay @question={{this.currentQuestion}} />
+        {{/unless}}
         
         <div class="mt-4">
           {{#unless this.showResults}}
             {{#if (eq this.activeScenario "simple_choice")}}
               <SimpleChoiceForm 
                 @question={{this.currentQuestion}}
+                @sessionId={{this.sessionId}}
+                @deviceId={{this.deviceID}}
+                @responseSubmitted={{this.responseSubmitted}}
                 @onSubmit={{this.submitResponse}}
               />
             {{else if (eq this.activeScenario "choice_overload")}}
               <ChoiceOverloadForm 
                 @question={{this.currentQuestion}}
+                @sessionId={{this.sessionId}}
+                @deviceId={{this.deviceID}}
+                @responseSubmitted={{this.responseSubmitted}}
                 @onSubmit={{this.submitResponse}}
               />
             {{else if (eq this.activeScenario "ranking")}}
               <RankingForm 
                 @question={{this.currentQuestion}}
+                @sessionId={{this.sessionId}}
+                @deviceId={{this.deviceID}}
+                @responseSubmitted={{this.responseSubmitted}}
                 @onSubmit={{this.submitResponse}}
               />
             {{else if (eq this.activeScenario "point_allocation")}}
               <PointAllocationForm 
                 @question={{this.currentQuestion}}
+                @sessionId={{this.sessionId}}
+                @deviceId={{this.deviceID}}
+                @responseSubmitted={{this.responseSubmitted}}
                 @onSubmit={{this.submitResponse}}
               />
             {{else if (eq this.activeScenario "approval_voting")}}
               <ApprovalVotingForm 
                 @question={{this.currentQuestion}}
+                @sessionId={{this.sessionId}}
+                @deviceId={{this.deviceID}}
+                @responseSubmitted={{this.responseSubmitted}}
                 @onSubmit={{this.submitResponse}}
               />
             {{/if}}
@@ -55,10 +77,6 @@
           </div>
         </div>
       {{/if}}
-      
-      {{#unless this.demographicsCompleted}}
-        <DemographicForm @onComplete={{this.onDemographicsComplete}} />
-      {{/unless}}
       
     </div>
   </div>

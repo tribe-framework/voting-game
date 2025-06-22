@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card-body">
-    <form {{on "submit" (fn this.submitResponse)}}>
+    <form>
       <div class="mb-4">
         {{#each this.options as |option index|}}
           <div class="form-check mb-3">
@@ -8,6 +8,7 @@
               class="form-check-input" 
               type="radio" 
               name="choiceOverload" 
+              disabled={{@responseSubmitted}}
               id="overload-option-{{index}}"
               {{on "change" (fn this.selectOption option)}}
               checked={{eq this.selectedOption option}}
@@ -20,18 +21,28 @@
       </div>
       
       <div class="d-grid">
-        <button 
-          type="submit" 
-          class="btn btn-primary btn-lg"
-          disabled={{or (not this.selectedOption) this.isSubmitting}}
-        >
-          {{#if this.isSubmitting}}
-            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-            Submitting...
-          {{else}}
-            Submit Response
-          {{/if}}
-        </button>
+        {{#unless @responseSubmitted}}
+          <button 
+            type="button" 
+            {{on 'click' this.submitResponse}}
+            class="btn btn-primary btn-lg"
+            disabled={{or (not this.selectedOption) this.isSubmitting}}
+          >
+            {{#if this.isSubmitting}}
+              <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+              Submitting...
+            {{else}}
+              Submit Response
+            {{/if}}
+          </button>
+        {{else}}
+          <button 
+            type="button" 
+            class="btn btn-success btn-lg"
+          >
+            <i class="bi bi-check-circle ms-2"></i> Response submitted
+          </button>
+        {{/unless}}
       </div>
     </form>
   </div>

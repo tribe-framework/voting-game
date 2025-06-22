@@ -19,7 +19,6 @@ export default class AdminController extends Controller {
 			{ key: 'choice_overload', title: 'Choice Overload' },
 			{ key: 'ranking', title: 'Ranking' },
 			{ key: 'point_allocation', title: 'Point Allocation' },
-			{ key: 'approval_voting', title: 'Approval Voting' },
 		];
 	}
 
@@ -59,10 +58,12 @@ export default class AdminController extends Controller {
 
 	@action
 	async switchScenario(scenario) {
+		console.log(scenario);
+
 		if (!this.selectedQuestion) return;
 
 		try {
-			this.selectedQuestion.active_scenario = scenario;
+			this.selectedQuestion.modules.active_scenario = scenario;
 			await this.selectedQuestion.save();
 
 			// Refresh the question to ensure consistency
@@ -79,8 +80,8 @@ export default class AdminController extends Controller {
 
 		try {
 			const newValue =
-				this.selectedQuestion.show_results === 'yes' ? 'no' : 'yes';
-			this.selectedQuestion.show_results = newValue;
+				this.selectedQuestion.modules.show_results === 'yes' ? 'no' : 'yes';
+			this.selectedQuestion.modules.show_results = newValue;
 			await this.selectedQuestion.save();
 
 			await this.selectedQuestion.reload();

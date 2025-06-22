@@ -9,8 +9,7 @@
         <img 
           src="{{this.qrCodeUrl}}" 
           alt="QR Code for session access" 
-          class="img-fluid rounded border"
-          style="max-width: 300px;"
+          class="rounded border w-100"
         >
       </div>
       
@@ -28,15 +27,6 @@
           <i class="bi bi-box-arrow-up-right me-2"></i>
           Open Session Link
         </a>
-        
-        <button 
-          type="button" 
-          class="btn btn-outline-secondary btn-sm"
-          {{on "click" (fn (mut this.copied) true)}}
-        >
-          <i class="bi bi-clipboard me-1"></i>
-          Copy Link
-        </button>
       </div>
       
       {{#if this.copied}}
@@ -45,7 +35,7 @@
         </div>
       {{/if}}
     {{else}}
-      <div class="text-muted">
+      <div class="text-dark">
         <i class="bi bi-qr-code display-4"></i>
         <p class="mt-2">QR code will appear when session is active</p>
       </div>

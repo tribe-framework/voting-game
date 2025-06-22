@@ -36,8 +36,10 @@ export default class SimpleChoiceForm extends Component {
 
 		try {
 			const responseData = {
-				question: this.args.question.id,
+				question: this.args.question.slug,
 				selected_option: this.selectedOption,
+				session_id: this.args.sessionId,
+				device_id: this.args.deviceId,
 			};
 
 			await this.responseTracker.saveResponse(

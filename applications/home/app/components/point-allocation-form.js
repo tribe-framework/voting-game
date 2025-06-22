@@ -19,9 +19,10 @@ export default class PointAllocationForm extends Component {
 	}
 
 	initializePoints() {
-		if (this.args.question?.options) {
+		if (this.args.question.modules?.options) {
 			// Include extra option like other scenarios
-			const originalOptions = [...this.args.question.options];
+			const originalOptions = [...this.args.question.modules.options];
+			/*
 			const extraOptions = [
 				'None of the above',
 				'Other',
@@ -37,7 +38,7 @@ export default class PointAllocationForm extends Component {
 			if (availableExtras.length > 0) {
 				originalOptions.push(availableExtras[0]);
 			}
-
+			*/
 			this.pointDistribution = originalOptions.map((option) => ({
 				option,
 				points: 0,
@@ -72,7 +73,7 @@ export default class PointAllocationForm extends Component {
 
 	@action
 	setPoints(index, value) {
-		const points = parseInt(value) || 0;
+		const points = parseInt(value.key) || 0;
 		const newDistribution = [...this.pointDistribution];
 		const oldPoints = newDistribution[index].points;
 
@@ -93,8 +94,10 @@ export default class PointAllocationForm extends Component {
 
 		try {
 			const responseData = {
-				question: this.args.question.id,
+				question: this.args.question.slug,
 				point_distribution: this.pointDistribution,
+				session_id: this.args.sessionId,
+				device_id: this.args.deviceId,
 			};
 
 			await this.responseTracker.saveResponse(

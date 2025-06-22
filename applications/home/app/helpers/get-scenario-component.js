@@ -2,12 +2,12 @@ import { helper } from '@ember/component/helper';
 
 export default helper(function getScenarioComponent([scenario]) {
   const componentMap = {
-    simple_choice: 'simple-choice-form',
-    choice_overload: 'choice-overload-form',
-    ranking: 'ranking-form',
-    point_allocation: 'point-allocation-form',
-    approval_voting: 'approval-voting-form',
+    simple_choice: 'simple-choice-response',
+    choice_overload: 'choice-overload-response',
+    ranking: 'ranking-response',
+    point_allocation: 'point-allocation-response',
+    approval_voting: 'approval-voting-response',
   };
 
-  return componentMap[scenario] || 'simple-choice-form';
+  return componentMap[scenario] || 'simple-choice-response';
 });

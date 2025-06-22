@@ -34,9 +34,10 @@ export default class ResponseTrackerService extends Service {
 				age: demographics.age || '',
 				caste: demographics.caste || '',
 				timestamp: new Date().toISOString(),
+				content_privacy: "public",
 			});
 
-			const response = this.store.createRecord(responseType, formattedData);
+			const response = this.store.createRecord(responseType, { modules: formattedData });
 			await response.save();
 
 			this.currentResponse = response;

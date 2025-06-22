@@ -33,11 +33,6 @@ export default class ResultsOverview extends Component {
 				title: 'Point Allocation',
 				responseType: 'point-allocation-response',
 			},
-			{
-				key: 'approval_voting',
-				title: 'Approval Voting',
-				responseType: 'approval-voting-response',
-			},
 		];
 	}
 
@@ -51,15 +46,16 @@ export default class ResultsOverview extends Component {
 			const scenarioResults = await Promise.all(
 				this.scenarios.map(async (scenario) => {
 					try {
-						const responses = await this.store.query(scenario.responseType, {
-							question: this.args.question.id,
+						const responses = await this.store.query(scenario.responseType, { modules: {
+								question: this.args.question.slug,
+							}
 						});
 
 						return {
 							scenario: scenario.key,
 							title: scenario.title,
-							responses: responses.modules,
-							count: responses.modules.length,
+							responses: responses,
+							count: responses.length,
 						};
 					} catch (error) {
 						console.warn(`Failed to load ${scenario.key} responses:`, error);

@@ -19,9 +19,11 @@ export default class RankingForm extends Component {
 	}
 
 	initializeRankings() {
-		if (this.args.question?.options) {
+		if (this.args.question.modules?.options) {
 			// Include the extra option like choice overload
-			const originalOptions = [...this.args.question.options];
+			const originalOptions = [...this.args.question.modules.options];
+
+			/*
 			const extraOptions = [
 				'None of the above',
 				'Other',
@@ -37,6 +39,7 @@ export default class RankingForm extends Component {
 			if (availableExtras.length > 0) {
 				originalOptions.push(availableExtras[0]);
 			}
+			*/
 
 			// Shuffle options for ranking
 			this.rankings = this.shuffleArray(originalOptions);
@@ -89,8 +92,10 @@ export default class RankingForm extends Component {
 
 		try {
 			const responseData = {
-				question: this.args.question.id,
+				question: this.args.question.slug,
 				rankings: this.rankings,
+				session_id: this.args.sessionId,
+				device_id: this.args.deviceId,
 			};
 
 			await this.responseTracker.saveResponse('ranking-response', responseData);

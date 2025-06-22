@@ -17,10 +17,11 @@ export default class ApprovalVotingForm extends Component {
 	}
 
 	get options() {
-		if (!this.args.question?.options) return [];
+		if (!this.args.question.modules?.options) return [];
 
 		// Include extra option like other scenarios
-		const originalOptions = [...this.args.question.options];
+		const originalOptions = [...this.args.question.modules.options];
+		/*
 		const extraOptions = ['None of the above', 'Other', 'Prefer not to choose'];
 		const availableExtras = extraOptions.filter(
 			(extra) =>
@@ -32,6 +33,7 @@ export default class ApprovalVotingForm extends Component {
 		if (availableExtras.length > 0) {
 			originalOptions.push(availableExtras[0]);
 		}
+		*/
 
 		return originalOptions;
 	}
@@ -56,7 +58,7 @@ export default class ApprovalVotingForm extends Component {
 		this.approvedOptions = currentApproved;
 	}
 
-	isApproved(option) {
+	isApproved = (option)=>{
 		return this.approvedOptions.includes(option);
 	}
 
@@ -70,6 +72,8 @@ export default class ApprovalVotingForm extends Component {
 			const responseData = {
 				question: this.args.question.id,
 				approved_options: this.approvedOptions,
+				session_id: this.args.sessionId,
+				device_id: this.args.deviceId,
 			};
 
 			await this.responseTracker.saveResponse(

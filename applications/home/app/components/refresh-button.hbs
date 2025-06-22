@@ -5,12 +5,10 @@
   disabled={{this.isRefreshing}}
 >
   {{#if this.isRefreshing}}
-    <span class="spinner-border spinner-border-sm me-2" role="status">
+    <span class="spinner-border spinner-border-sm" role="status">
       <span class="visually-hidden">Refreshing...</span>
     </span>
-    Refreshing...
   {{else}}
-    <i class="bi bi-arrow-clockwise me-2"></i>
-    Refresh Data
+    <i class="bi bi-arrow-clockwise"></i>
   {{/if}}
 </button>
